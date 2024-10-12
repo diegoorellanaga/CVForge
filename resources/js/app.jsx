@@ -19,3 +19,9 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
+
+
+// // Add TestComponent to the root element
+// import TestComponent from './TestComponent';
+// const root = createRoot(document.getElementById('app'));
+// root.render(<TestComponent />);
