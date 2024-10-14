@@ -1,6 +1,43 @@
-import React from 'react';
+import React, {useState} from 'react';
+import { Inertia } from '@inertiajs/inertia';
+import EditExperience from './EditExperience';
+import Modal from '@/Components/Modal';
 
-function ShowExperiences({ experiences }) {
+function ShowExperiences({ experiences, setExperiences, resumeId }) {
+
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [selectedExperience, setSelectedExperience] = useState(null);
+
+    const handleEditOpen = (experience) => {
+        setSelectedExperience(experience);
+        setEditModalOpen(true);
+    };
+
+    const handleEditClose = () => {
+        setEditModalOpen(false);
+        setSelectedExperience(null);
+    };
+
+    // Function to handle the delete action
+    const handleDeleteEx = async (experienceId) => {
+        if (window.confirm("Are you sure you want to delete this experience?")) {
+            Inertia.delete(route('experiences.destroy', experienceId), {
+                onSuccess: () => {
+                    // Update the local state to remove the deleted experience
+                    setExperiences((prevExperiences) =>
+                        prevExperiences.filter(exp => exp.id !== experienceId)
+                    );
+
+                    alert("Experience deleted successfully.");
+                },
+                onError: (errors) => {
+                    console.error("Error deleting experience:", errors);
+                    alert("Failed to delete experience. Please try again.");
+                }
+            });
+        }
+    };
+
     return (
         <div className="experiences-list">
             <h2>Job Experiences</h2>
@@ -12,6 +49,27 @@ function ShowExperiences({ experiences }) {
                         <p><strong>Description:</strong> {experience.description}</p>
                         <p><strong>Current Job:</strong> {experience.current ? 'Yes' : 'No'}</p>
                         {experience.departure_reason && <p><strong>Reason for leaving:</strong> {experience.departure_reason}</p>}
+                        {/* Delete button */}
+                        <button 
+                            className="mt-2 bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
+                            onClick={() => handleDeleteEx(experience.id)}
+                        >
+                            Delete
+                        </button>
+                        <button 
+                            onClick={() => handleEditOpen(experience)} 
+                            className="mt-2 bg-cyan-500 text-white py-1 px-3 rounded hover:bg-blue-600"
+                              >
+                          Edit
+                        </button>
+
+                        <Modal show={isEditModalOpen} onClose={handleEditClose}>
+                            {selectedExperience && (
+                                <EditExperience experience={selectedExperience} resumeId={resumeId} />
+                            )}
+                         </Modal>
+
+                        {/* <EditExperience experience={experience} resumeId={resumeId} /> */}
                     </li>
                 )) : (
                     <p>No job experiences added yet.</p>

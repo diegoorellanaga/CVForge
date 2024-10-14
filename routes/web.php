@@ -55,6 +55,7 @@ Route::get('/resumes/{id}', [ResumeController::class, 'show'])->name('resumes.sh
 // experiences
 Route::post('/resumes/{resume}/experiences', [ExperienceController::class, 'store'])->name('experiences.store');
 Route::delete('/experiences/{experience}', [ExperienceController::class, 'destroy'])->name('experiences.destroy');
+Route::put('/resumes/{resume}/experiences/{experience}', [ExperienceController::class, 'update'])->name('experiences.update');
 
 Route::post('/resumes/{resumeId}/headers', [HeaderController::class, 'store'])->name('headers.store');
 
