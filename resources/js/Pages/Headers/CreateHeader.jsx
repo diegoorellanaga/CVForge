@@ -20,8 +20,10 @@ function AddHeader({ resumeId, existingHeader }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (existingHeader) {
+            console.log(route('headers.update', [resumeId, existingHeader.id]));
             // Send a PUT request to update the existing header
             Inertia.put(route('headers.update', [resumeId, existingHeader.id]), formData);
+
         } else {
             // Send a POST request to create a new header
             Inertia.post(route('headers.store', resumeId), formData);
@@ -29,12 +31,13 @@ function AddHeader({ resumeId, existingHeader }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
+        <form onSubmit={handleSubmit} style={{maxHeight:"80vh",overflowY:"scroll"}} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
             <div>
                 <label className="block text-sm font-medium text-gray-700">Image URL</label>
                 <input
                     type="text"
                     name="image_url"
+                    defaultValue={existingHeader?.image_url}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Image URL"
                     onChange={e => setFormData({ ...formData, image_url: e.target.value })}
@@ -45,6 +48,7 @@ function AddHeader({ resumeId, existingHeader }) {
                 <label className="block text-sm font-medium text-gray-700">Summary</label>
                 <textarea
                     name="summary"
+                    defaultValue={existingHeader?.professional_summary}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Professional Summary"
                     onChange={e => setFormData({ ...formData, summary: e.target.value })}
@@ -56,6 +60,7 @@ function AddHeader({ resumeId, existingHeader }) {
                 <input
                     type="text"
                     name="phone"
+                    defaultValue={existingHeader?.phone}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Phone Number"
                     onChange={e => setFormData({ ...formData, phone: e.target.value })}
@@ -67,6 +72,7 @@ function AddHeader({ resumeId, existingHeader }) {
                 <input
                     type="email"
                     name="email"
+                    defaultValue={existingHeader?.email}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Email Address"
                     onChange={e => setFormData({ ...formData, email: e.target.value })}
@@ -78,6 +84,7 @@ function AddHeader({ resumeId, existingHeader }) {
                 <input
                     type="text"
                     name="location"
+                    defaultValue={existingHeader?.location}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Location"
                     onChange={e => setFormData({ ...formData, location: e.target.value })}
@@ -89,6 +96,7 @@ function AddHeader({ resumeId, existingHeader }) {
                 <input
                     type="text"
                     name="personal_site"
+                    defaultValue={existingHeader?.personal_site}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Personal Website"
                     onChange={e => setFormData({ ...formData, personal_site: e.target.value })}
@@ -100,6 +108,7 @@ function AddHeader({ resumeId, existingHeader }) {
                 <input
                     type="text"
                     name="name"
+                    defaultValue={existingHeader?.name}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Name"
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
@@ -111,6 +120,7 @@ function AddHeader({ resumeId, existingHeader }) {
                 <input
                     type="text"
                     name="professional_title"
+                    defaultValue={existingHeader?.professional_title}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Professional Title"
                     onChange={e => setFormData({ ...formData, professional_title: e.target.value })}
@@ -122,6 +132,7 @@ function AddHeader({ resumeId, existingHeader }) {
                 <input
                     type="text"
                     name="current_company"
+                    defaultValue={existingHeader?.current_company}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Current Company"
                     onChange={e => setFormData({ ...formData, current_company: e.target.value })}
@@ -133,6 +144,7 @@ function AddHeader({ resumeId, existingHeader }) {
                 <input
                     type="text"
                     name="current_position"
+                    defaultValue={existingHeader?.current_position}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Current Position"
                     onChange={e => setFormData({ ...formData, current_position: e.target.value })}

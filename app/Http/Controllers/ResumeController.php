@@ -60,16 +60,18 @@ class ResumeController extends Controller
         return redirect()->route('resumes.index')->with('success', 'Resume deleted successfully');
     }
 
-    public function show($id)
+    public function show($id, $activeTab)
     {
         $user = Auth::user();
         // Fetch resume along with its related experiences
-        $resume = Resume::with(['experiences','header'])->findOrFail($id);
+        $resume = Resume::with(['experiences','header','skills'])->findOrFail($id);
 
         // Pass the resume (with experiences) to the Inertia view
         return Inertia::render('Resumes/Show', [
             'resume' => $resume,
-            'user' => $user
+            'user' => $user,
+            'activeTab' => $activeTab,
+
         ]);
     }
 

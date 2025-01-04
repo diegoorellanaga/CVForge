@@ -49,7 +49,7 @@ export default function Index({ resumes, user }) {
                             key={resume.resume_id}
                             className="flex justify-between items-center p-4 border border-gray-300 rounded-md shadow-sm"
                         >
-                            <Link href={route('resumes.show', resume.resume_id)} className="text-gray-700 font-medium hover:underline">
+                            <Link href={route('resumes.show', [resume.resume_id,"header"])} className="text-gray-700 font-medium hover:underline">
                                 {resume.title} - <span className="italic text-gray-500">{resume.style}</span>
                             </Link>
                             <button

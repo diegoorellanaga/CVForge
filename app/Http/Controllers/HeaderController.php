@@ -81,7 +81,7 @@ class HeaderController extends Controller
             return back()->withErrors(['error' => 'Unable to create header.']);
         }
     
-        return redirect()->route('resumes.show', $resumeId);
+        return redirect()->route('resumes.show', [$resumeId, "header"]);
     }
 
     // Show a form to edit an existing header
@@ -97,8 +97,9 @@ class HeaderController extends Controller
     }
 
     // Update an existing header
-    public function update(Request $request, $id)
+    public function update(Request $request, $resumeId, $headerId)
     {
+        \Log::info("Resume ID: $resumeId, Header ID: $headerId");
         $request->validate([
             'image_url' => 'nullable|url',
             'summary' => 'required|string',
@@ -112,7 +113,7 @@ class HeaderController extends Controller
             'current_position' => 'nullable|string|max:100',
         ]);
 
-        $header = Header::findOrFail($id);
+        $header = Header::findOrFail($headerId);
         $header->update([
             'image_url' => $request->image_url,
             'professional_summary' => $request->summary,
@@ -126,6 +127,6 @@ class HeaderController extends Controller
             'current_position' => $request->current_position,
         ]);
 
-        return redirect()->route('resumes.show', $header->resume_id);
+        return redirect()->route('resumes.show', [$header->resume_id, "header"]);
     }
 }

@@ -32,5 +32,11 @@ class Resume extends Model
         return $this->hasOne(Header::class, 'resume_id');
     }
 
+    // Define relationship with skills
+    public function skills()
+    {
+        return $this->hasMany(Skill::class, 'resume_id');
+    }
+
 
 }

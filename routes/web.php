@@ -7,7 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\HeaderController;
-
+use App\Http\Controllers\SkillController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,7 +50,8 @@ Route::post('/resumes', [ResumeController::class, 'store'])->middleware('auth')-
 
 // web.php
 Route::delete('/resumes/{id}', [ResumeController::class, 'destroy'])->name('resumes.destroy');
-Route::get('/resumes/{id}', [ResumeController::class, 'show'])->name('resumes.show');
+Route::get('/resumes/{id}/{activeTab?}', [ResumeController::class, 'show'])->name('resumes.show');
+
 
 // experiences
 Route::post('/resumes/{resume}/experiences', [ExperienceController::class, 'store'])->name('experiences.store');
@@ -62,6 +63,11 @@ Route::post('/resumes/{resumeId}/headers', [HeaderController::class, 'store'])->
 Route::get('/headers/{header}/edit', [HeaderController::class, 'edit'])->name('headers.edit');
 // Update existing header
 Route::put('/resumes/{resume}/headers/{header}', [HeaderController::class, 'update'])->name('headers.update');
+
+
+Route::post('/resumes/{resume}/skills', [SkillController::class, 'store'])->name('skills.store');
+Route::delete('/skills/{skill}', [SkillController::class, 'destroy'])->name('skills.destroy');
+Route::put('/resumes/{resume}/skills/{skill}', [SkillController::class, 'update'])->name('skills.update');
 
 
 require __DIR__.'/auth.php';

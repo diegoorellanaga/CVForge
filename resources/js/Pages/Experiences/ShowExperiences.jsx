@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import EditExperience from './EditExperience';
-import Modal from '@/Components/Modal';
+
+
+import { Tab, Tabs,Button, Modal } from 'react-bootstrap';
 
 function ShowExperiences({ experiences, setExperiences, resumeId }) {
 
@@ -58,16 +60,22 @@ function ShowExperiences({ experiences, setExperiences, resumeId }) {
                         </button>
                         <button 
                             onClick={() => handleEditOpen(experience)} 
-                            className="mt-2 bg-cyan-500 text-white py-1 px-3 rounded hover:bg-blue-600"
+                            className="mt-2 ml-2 bg-cyan-500 text-white py-1 px-3 rounded hover:bg-blue-600"
                               >
                           Edit
                         </button>
 
-                        <Modal show={isEditModalOpen} onClose={handleEditClose}>
-                            {selectedExperience && (
-                                <EditExperience experience={selectedExperience} resumeId={resumeId} />
-                            )}
-                         </Modal>
+                        <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Edit Experience</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                {selectedExperience && (
+                                    <EditExperience experience={selectedExperience} resumeId={resumeId} />
+                                )}
+                            </Modal.Body>
+                        </Modal>
+
 
                         {/* <EditExperience experience={experience} resumeId={resumeId} /> */}
                     </li>
