@@ -38,5 +38,11 @@ class Resume extends Model
         return $this->hasMany(Skill::class, 'resume_id');
     }
 
+    // New relationship for educations
+    public function educations()
+    {
+        return $this->hasMany(Education::class, 'resume_id');
+    }
+
 
 }

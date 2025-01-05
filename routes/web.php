@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\EducationController;
 use App\Http\Controllers\HeaderController;
 use App\Http\Controllers\SkillController;
 /*
@@ -59,7 +60,6 @@ Route::delete('/experiences/{experience}', [ExperienceController::class, 'destro
 Route::put('/resumes/{resume}/experiences/{experience}', [ExperienceController::class, 'update'])->name('experiences.update');
 
 Route::post('/resumes/{resumeId}/headers', [HeaderController::class, 'store'])->name('headers.store');
-
 Route::get('/headers/{header}/edit', [HeaderController::class, 'edit'])->name('headers.edit');
 // Update existing header
 Route::put('/resumes/{resume}/headers/{header}', [HeaderController::class, 'update'])->name('headers.update');
@@ -68,6 +68,12 @@ Route::put('/resumes/{resume}/headers/{header}', [HeaderController::class, 'upda
 Route::post('/resumes/{resume}/skills', [SkillController::class, 'store'])->name('skills.store');
 Route::delete('/skills/{skill}', [SkillController::class, 'destroy'])->name('skills.destroy');
 Route::put('/resumes/{resume}/skills/{skill}', [SkillController::class, 'update'])->name('skills.update');
+
+
+// education
+Route::post('/resumes/{resume}/education', [EducationController::class, 'store'])->name('education.store');
+Route::delete('/education/{education}', [EducationController::class, 'destroy'])->name('education.destroy');
+Route::put('/resumes/{resume}/education/{education}', [EducationController::class, 'update'])->name('education.update');
 
 
 require __DIR__.'/auth.php';

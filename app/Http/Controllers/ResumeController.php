@@ -64,7 +64,7 @@ class ResumeController extends Controller
     {
         $user = Auth::user();
         // Fetch resume along with its related experiences
-        $resume = Resume::with(['experiences','header','skills'])->findOrFail($id);
+        $resume = Resume::with(['experiences','header','skills','educations'])->findOrFail($id);
 
         // Pass the resume (with experiences) to the Inertia view
         return Inertia::render('Resumes/Show', [
