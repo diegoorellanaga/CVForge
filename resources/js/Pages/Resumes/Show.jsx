@@ -10,7 +10,9 @@ import AddHeader from '../Headers/CreateHeader';
 import ShowEducations from '../Education/ShowEducations';
 import AddEducation from '../Education/CreateEducation';
 import Modal from '@/Components/Modal';
-import { Tab, Tabs, Button } from 'react-bootstrap';
+import MyPdfDocument from '@/Components/PDF/MyPdfDocument';
+import PdfPreviewer from '@/Components/PDF/PdfPreviewer';
+import { Tab, Tabs, Button, Row, Col } from 'react-bootstrap';
 
 function Show({ resume, user, activeTab }) {
     const [experiences, setExperiences] = useState(resume.experiences);
@@ -32,6 +34,8 @@ function Show({ resume, user, activeTab }) {
 
     return (
         <AuthenticatedLayout user={user}>
+            <Row>
+                <Col>
             <div className="max-w-2xl mx-auto bg-white p-6 shadow-md rounded-lg">
                 <h1 className="text-2xl font-semibold text-gray-800 mb-6">{resume.title}</h1>
                 <p><strong>Style:</strong> {resume.style}</p>
@@ -83,6 +87,11 @@ function Show({ resume, user, activeTab }) {
                     </Tab>
                 </Tabs>
             </div>
+            </Col>
+            <Col>
+            <PdfPreviewer  header={resume.header} experiences={resume.experiences}/>
+            </Col>
+            </Row>
         </AuthenticatedLayout>
     );
 }
