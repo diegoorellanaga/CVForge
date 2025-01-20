@@ -89,7 +89,7 @@ function Show({ resume, user, activeTab }) {
             </div>
             </Col>
             <Col>
-            <PdfPreviewer  header={resume.header} experiences={resume.experiences}/>
+            <PdfPreviewer  header={resume.header} experiences={resume.experiences} skills={resume.skills} education={resume.educations}/>
             </Col>
             </Row>
         </AuthenticatedLayout>
