@@ -5,7 +5,7 @@ function AddHeader({ resumeId, existingHeader }) {
     // Set initial form data based on whether an existing header is passed
     const [formData, setFormData] = useState({
         image_url: existingHeader ? existingHeader.image_url : '',
-        summary: existingHeader ? existingHeader.professional_summary : '',
+        professional_summary: existingHeader ? existingHeader.professional_summary : '',
         phone: existingHeader ? existingHeader.phone : '',
         email: existingHeader ? existingHeader.email : '',
         location: existingHeader ? existingHeader.location : '',
@@ -47,11 +47,12 @@ function AddHeader({ resumeId, existingHeader }) {
             <div>
                 <label className="block text-sm font-medium text-gray-700">Summary</label>
                 <textarea
+                    required
                     name="summary"
                     defaultValue={existingHeader?.professional_summary}
                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Professional Summary"
-                    onChange={e => setFormData({ ...formData, summary: e.target.value })}
+                    onChange={e => setFormData({ ...formData, professional_summary: e.target.value })}
                 ></textarea>
             </div>
 
@@ -70,6 +71,7 @@ function AddHeader({ resumeId, existingHeader }) {
             <div>
                 <label className="block text-sm font-medium text-gray-700">Email</label>
                 <input
+                    required
                     type="email"
                     name="email"
                     defaultValue={existingHeader?.email}
@@ -106,6 +108,7 @@ function AddHeader({ resumeId, existingHeader }) {
             <div>
                 <label className="block text-sm font-medium text-gray-700">Name</label>
                 <input
+                    required
                     type="text"
                     name="name"
                     defaultValue={existingHeader?.name}
@@ -118,6 +121,7 @@ function AddHeader({ resumeId, existingHeader }) {
             <div>
                 <label className="block text-sm font-medium text-gray-700">Professional Title</label>
                 <input
+                    required
                     type="text"
                     name="professional_title"
                     defaultValue={existingHeader?.professional_title}

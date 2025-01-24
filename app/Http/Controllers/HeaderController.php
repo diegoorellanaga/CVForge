@@ -43,26 +43,26 @@ class HeaderController extends Controller
         // Validate the request
         $validatedData = $request->validate([
             'image_url' => 'nullable|url',
-            'summary' => 'required|string',
+            'professional_summary' => 'nullable|string',
             'phone' => 'nullable|string|max:15',
             'email' => 'nullable|email',
             'location' => 'nullable|string|max:100',
             'personal_site' => 'nullable|url',
-            'name' => 'required|string|max:100',
-            'professional_title' => 'required|string|max:100',
+            'name' => 'nullable|string|max:100',
+            'professional_title' => 'nullable|string|max:100',
             'current_company' => 'nullable|string|max:100',
             'current_position' => 'nullable|string|max:100',
         ]);
     
-        // Debug: Log validated data before insertion
-        Log::info('Validated header data', $validatedData);
+       // Debug: Log validated data before insertion
+       Log::info('Validated header data', $validatedData);
     
         try {
             // Create a new header
             $header = Header::create([
                 'resume_id' => $resumeId,
                 'image_url' => $request->image_url,
-                'professional_summary' => $request->summary,
+                'professional_summary' => $request->professional_summary,
                 'phone' => $request->phone,
                 'email' => $request->email,
                 'location' => $request->location,
