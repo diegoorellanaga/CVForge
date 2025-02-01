@@ -72,8 +72,9 @@ const styles = StyleSheet.create({
         top: 0, // Slight adjustment to align vertically with text
     },
     timelineTextContainer: { marginLeft: 20 }, // Space text to the right of the circle
-    timelineDate: { fontSize: 10, fontWeight: 'bold', color: '#333' },
+    timelineDate: { fontSize: 10,marginBottom:"3px", fontWeight: 'bold', color: '#333' },
     timelineDetails: { fontSize: 9, lineHeight: 1.4, color: '#333' },
+    timelineJobTitle: {fontSize: 12,marginBottom:"5px", fontWeight: 'bold', color: '#333' },
 });
 
 const MyPdfDocument = ({ header, experiences, skills, education }) => (
@@ -147,32 +148,35 @@ const MyPdfDocument = ({ header, experiences, skills, education }) => (
                 </View>
                 {/* Work Experience */}
                 <View>
-    <Text style={styles.experienceTitle}>Work Experience</Text>
-    <View>
+                <Text style={styles.experienceTitle}>Work Experience</Text>
+                <View>
 
-    <View style={styles.timelineContainer}>
-        {/* Vertical Line */}
-        <View style={styles.timelineLine}></View>
-        {/* Timeline Items */}
-        {experiences.map((exp, index) => (
-            <View key={index} style={styles.timelineItem}>
-                {/* Circle */}
-                <View style={styles.timelineCircle}></View>
-                {/* Text */}
-                <View style={styles.timelineTextContainer}>
-                    <Text style={styles.timelineDate}>
-                        {exp?.initial_date} - {exp?.current ? 'Present' : exp?.end_date}
-                    </Text>
-                    <Text style={styles.timelineDetails}>
-                        {exp?.job_title} at {exp?.company_name}
-                    </Text>
-                    <Text style={styles.timelineDetails}>{exp?.description}</Text>
+                <View style={styles.timelineContainer}>
+                    {/* Vertical Line */}
+                    <View style={styles.timelineLine}></View>
+                    {/* Timeline Items */}
+                    {experiences.map((exp, index) => (
+                        <View key={index} style={styles.timelineItem}>
+                            {/* Circle */}
+                            <View style={styles.timelineCircle}></View>
+                            {/* Text */}
+                            <View style={styles.timelineTextContainer}>
+                                <Text style={styles.timelineDate}>
+                                    {exp?.initial_date} - {exp?.current ? 'Present' : exp?.end_date}
+                                </Text>
+                                <Text style={styles.timelineDetails}>
+                                {exp?.company_name} | {exp?.place} 
+                                </Text>
+                                <Text style={styles.timelineJobTitle}>
+                                    {exp?.job_title} 
+                                </Text>
+                                <Text style={styles.timelineDetails}>{exp?.description}</Text>
+                            </View>
+                        </View>
+                    ))}
                 </View>
             </View>
-        ))}
-    </View>
-</View>
-</View>
+            </View>
 
                 {/* References */}
                 <View style={styles.references}>

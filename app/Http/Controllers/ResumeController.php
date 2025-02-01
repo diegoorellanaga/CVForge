@@ -8,6 +8,7 @@ use App\Models\Resume;
 use Illuminate\Support\Facades\Auth; // Ensure this is included
 use Illuminate\Support\Facades\Gate; // Optionally if you use Gate
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class ResumeController extends Controller
 {
@@ -62,10 +63,12 @@ class ResumeController extends Controller
 
     public function show($id, $activeTab)
     {
+
+        Log::error('This is an error log message.'.$activeTab."--".$id);
         $user = Auth::user();
         // Fetch resume along with its related experiences
-        $resume = Resume::with(['experiences','header','skills','educations'])->findOrFail($id);
-
+        $resume = Resume::with(['experiences','header','skills','educations','references','languages'])->findOrFail($id);
+        Log::info('Resume References:', $resume->references->toArray());
         // Pass the resume (with experiences) to the Inertia view
         return Inertia::render('Resumes/Show', [
             'resume' => $resume,

@@ -9,6 +9,11 @@ use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\HeaderController;
 use App\Http\Controllers\SkillController;
+use App\Http\Controllers\ReferenceController;
+
+use App\Http\Controllers\LanguageController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -74,6 +79,20 @@ Route::put('/resumes/{resume}/skills/{skill}', [SkillController::class, 'update'
 Route::post('/resumes/{resume}/education', [EducationController::class, 'store'])->name('education.store');
 Route::delete('/education/{education}', [EducationController::class, 'destroy'])->name('education.destroy');
 Route::put('/resumes/{resume}/education/{education}', [EducationController::class, 'update'])->name('education.update');
+
+// References
+
+
+
+
+Route::post('/references', [ReferenceController::class, 'store']); // Store a reference
+Route::put('/references/{id}/{resumeId}', [ReferenceController::class, 'update']); // Update a reference
+Route::delete('/references/{id}', [ReferenceController::class, 'destroy'])->name('references.destroy'); // Delete a reference
+
+// Language routes
+Route::post('/resumes/{resume}/languages', [LanguageController::class, 'store'])->name('languages.store');
+Route::put('/languages/{id}/{id_lan}', [LanguageController::class, 'update'])->name('languages.update');
+Route::delete('/languages/{id}', [LanguageController::class, 'destroy'])->name('languages.destroy');
 
 
 require __DIR__.'/auth.php';

@@ -44,5 +44,19 @@ class Resume extends Model
         return $this->hasMany(Education::class, 'resume_id');
     }
 
+    // New relationship for educations
+    public function references()
+    {
+        return $this->hasMany(Reference::class, 'resume_id');
+    }
+
+    // app/Models/Resume.php
+
+    public function languages()
+    {
+        return $this->hasMany(Language::class, 'resume_id');
+    }
+
+
 
 }
