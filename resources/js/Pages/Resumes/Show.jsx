@@ -15,6 +15,8 @@ import Modal from '@/Components/Modal';
 import MyPdfDocument from '@/Components/PDF/MyPdfDocument';
 import PdfPreviewer from '@/Components/PDF/PdfPreviewer';
 import ShowLanguages from '../Languages/ShowLanguages';
+import ShowExtraActivity from '../ExtraActivities/ShowExtraActivity';
+import CreateExtraActivity from '../ExtraActivities/CreateExtraActivity';
 import { Inertia } from '@inertiajs/inertia';
 
 
@@ -49,12 +51,13 @@ function Show({ resume, user, activeTab }) {
     };
 console.log("resume referece", resume.references)
 const references = resume.references
-
+const extraActivity = resume.extraactivities
     const [experiences, setExperiences] = useState(resume.experiences);
     const [skills, setSkills] = useState(resume.skills);
     const [educations, setEducations] = useState(resume.educations);
    // const [references, setReferences] = useState(resume.references);
     const [languages, setLanguages] = useState(resume.languages);
+    //const [extraActivity, setExtraActivity] = useState(resume.extraactivities);
 
     const [isAddExperienceModalOpen, setAddExperienceModalOpen] = useState(false);
     const [isAddSkillModalOpen, setAddSkillModalOpen] = useState(false);
@@ -62,6 +65,7 @@ const references = resume.references
     const [isAddHeaderModalOpen, setAddHeaderModalOpen] = useState(false);
     const [isAddReferenceModalOpen, setAddReferenceModalOpen] = useState(false);
     const [isAddLanguageModalOpen, setAddLanguageModalOpen] = useState(false);
+    const [isAddExtraModalOpen, setAddExtraModalOpen] = useState(false);
 
     const handleAddExperienceOpen = () => setAddExperienceModalOpen(true);
     const handleAddExperienceClose = () => setAddExperienceModalOpen(false);
@@ -77,6 +81,9 @@ const references = resume.references
 
     const handleAddLanguageOpen = () => setAddLanguageModalOpen(true);
     const handleAddLanguageClose = () => setAddLanguageModalOpen(false);
+
+    const handleAddExtraOpen = () => setAddExtraModalOpen(true);
+    const handleAddExtraClose = () => setAddExtraModalOpen(false);
 
     return (
         <AuthenticatedLayout user={user}>
@@ -149,6 +156,17 @@ const references = resume.references
 
                         <Modal show={isAddLanguageModalOpen} onClose={handleAddLanguageClose}>
                             <CreateLanguage resumeId={resume.resume_id} />
+                        </Modal>
+                    </Tab>
+
+                    <Tab eventKey="extraActivity" title="Extra Activity">
+                        <Button onClick={handleAddExtraOpen} variant="primary">
+                            Add Extra Activity
+                        </Button>
+                        <ShowExtraActivity extraActivity={extraActivity}  resumeId={resume.resume_id} />
+
+                        <Modal show={isAddExtraModalOpen} onClose={handleAddExtraClose}>
+                            <CreateExtraActivity resumeId={resume.resume_id} />
                         </Modal>
                     </Tab>
 

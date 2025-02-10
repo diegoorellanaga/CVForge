@@ -67,7 +67,7 @@ class ResumeController extends Controller
         Log::error('This is an error log message.'.$activeTab."--".$id);
         $user = Auth::user();
         // Fetch resume along with its related experiences
-        $resume = Resume::with(['experiences','header','skills','educations','references','languages'])->findOrFail($id);
+        $resume = Resume::with(['experiences','header','skills','educations','references','languages','extraactivities'])->findOrFail($id);
         Log::info('Resume References:', $resume->references->toArray());
         // Pass the resume (with experiences) to the Inertia view
         return Inertia::render('Resumes/Show', [

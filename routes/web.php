@@ -14,6 +14,8 @@ use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\LanguageController;
 
 
+use App\Http\Controllers\ExtraActivityController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -93,6 +95,12 @@ Route::delete('/references/{id}', [ReferenceController::class, 'destroy'])->name
 Route::post('/resumes/{resume}/languages', [LanguageController::class, 'store'])->name('languages.store');
 Route::put('/languages/{id}/{id_lan}', [LanguageController::class, 'update'])->name('languages.update');
 Route::delete('/languages/{id}', [LanguageController::class, 'destroy'])->name('languages.destroy');
+
+
+// extra activity
+Route::post('/resumes/{resume}/extra_activity', [ExtraActivityController::class, 'store'])->name('extraActivity.store');
+Route::delete('/extra_activity/{experience}', [ExtraActivityController::class, 'destroy'])->name('extraActivity.destroy');
+Route::put('/resumes/{resume}/extra_activity/{experience}', [ExtraActivityController::class, 'update'])->name('extraActivity.update');
 
 
 require __DIR__.'/auth.php';

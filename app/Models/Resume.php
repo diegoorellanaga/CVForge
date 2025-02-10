@@ -27,6 +27,11 @@ class Resume extends Model
         return $this->hasMany(Experience::class,'resume_id');
     }
 
+    public function extraactivities()
+    {
+        return $this->hasMany(ExtraActivity::class,'resume_id');
+    }
+
     public function header()
     {
         return $this->hasOne(Header::class, 'resume_id');
