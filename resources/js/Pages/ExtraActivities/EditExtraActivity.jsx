@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import ToastMessage from '@/Components/Utils/ToastMessage';
 
-function EditExtraActivity({ experience, resumeId }) {
+function EditExtraActivity({ experience, resumeId,refreshPage }) {
     const [formData, setFormData] = useState({
         initial_date: '',
         end_date: '',
@@ -11,6 +12,12 @@ function EditExtraActivity({ experience, resumeId }) {
         current: false,
         departure_reason: '',
         place: ''
+    });
+
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
     });
 
     // Use useEffect to populate the form with current experience data
@@ -27,14 +34,32 @@ function EditExtraActivity({ experience, resumeId }) {
         });
     }, [experience]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Use Inertia's put method to update the experience
-        Inertia.put(route('extraActivity.update', [resumeId, experience.id]), formData);
+        
+        try {
+            const response = await axios.put(route('extraActivity.update', [resumeId, experience.id]), formData);
+            console.log('Updated successfully', response.data);
+            setToast({ show: true, message: "Experience edited successfully!", variant: "success" });
+  
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error('Error updating:', error);
+            setToast({ show: true, message: "Failed to edit experience. Please try again.", variant: "danger" });
+           
+        }
     };
 
     return (
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
+            <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
+           
+           
             <div>
                 <label className="block text-sm font-medium text-gray-700">Initial Date</label>
                 <input

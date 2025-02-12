@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
-
-function CreateExtraActivity({ resumeId }) {
+import ToastMessage from '@/Components/Utils/ToastMessage';
+function CreateExtraActivity({ resumeId,refreshPage }) {
     
     const [formData, setFormData] = useState({
         initial_date: '',
@@ -13,13 +13,41 @@ function CreateExtraActivity({ resumeId }) {
         departure_reason: ''
     });
 
-    const handleSubmit = (e) => {
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     Inertia.post(route('extraActivity.store', resumeId), formData);
+    // };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        Inertia.post(route('extraActivity.store', resumeId), formData);
+    
+        try {
+            const response = await axios.post(route('extraActivity.store', resumeId), formData);
+            console.log('Created successfully', response.data);
+            setToast({ show: true, message: "Extra Activity Created successfully!", variant: "success" });
+
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error('Error creating:', error);
+        }
     };
 
     return (
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
+            <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
+           
+           
             <div>
                 <label className="block text-sm font-medium text-gray-700">Initial Date</label>
                 <input

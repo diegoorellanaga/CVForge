@@ -4,6 +4,7 @@ import EditReference from "./EditReference";
 import { Modal } from "react-bootstrap";
 
 import { router } from '@inertiajs/react';
+import ToastMessage from '@/Components/Utils/ToastMessage';
 
 const refreshPage = () => {
     router.reload({ preserveState: true , preserveScroll: true });
@@ -31,6 +32,13 @@ function ShowReferences({ references, setReferences, resumeId, refreshPage }) {
         setEditModalOpen(false);
         setSelectedReference(null);
     };
+
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
 // Inertia.delete(route('skills.destroy', skillId), {
     const handleDeleteReference = async (referenceId) => {
         console.log(referenceId)
@@ -54,6 +62,14 @@ function ShowReferences({ references, setReferences, resumeId, refreshPage }) {
 
     return (
         <div className="references-list">
+
+            <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
+
             <h2 className="text-2xl font-bold mb-4">References</h2>
             <ul>
                 {references && references.length > 0 ? (

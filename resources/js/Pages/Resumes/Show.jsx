@@ -163,10 +163,10 @@ const extraActivity = resume.extraactivities
                         <Button onClick={handleAddExtraOpen} variant="primary">
                             Add Extra Activity
                         </Button>
-                        <ShowExtraActivity extraActivity={extraActivity}  resumeId={resume.resume_id} />
+                        <ShowExtraActivity refreshPage={refreshPage} extraActivity={extraActivity}  resumeId={resume.resume_id} />
 
                         <Modal show={isAddExtraModalOpen} onClose={handleAddExtraClose}>
-                            <CreateExtraActivity resumeId={resume.resume_id} />
+                            <CreateExtraActivity resumeId={resume.resume_id} refreshPage={refreshPage} />
                         </Modal>
                     </Tab>
 

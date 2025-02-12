@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import { Inertia } from '@inertiajs/inertia';
 
 import EditExtraActivity from './EditExtraActivity';
-
+import ToastMessage from '@/Components/Utils/ToastMessage';
 
 import { Tab, Tabs,Button, Modal } from 'react-bootstrap';
 
-function ShowExtraActivity({ extraActivity, resumeId }) {
+function ShowExtraActivity({ extraActivity, resumeId,refreshPage }) {
 
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [selectedExperience, setSelectedExperience] = useState(null);
@@ -19,33 +19,47 @@ function ShowExtraActivity({ extraActivity, resumeId }) {
     const handleEditClose = () => {
         setEditModalOpen(false);
         setSelectedExperience(null);
+        
     };
+
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
 
     // Function to handle the delete action
     const handleDeleteEx = async (experienceId) => {
         if (window.confirm("Are you sure you want to delete this experience?")) {
-            Inertia.delete(route('extraActivity.destroy', experienceId), {
-                onSuccess: () => {
-                    // Update the local state to remove the deleted experience
-                    // setExperiences((prevExperiences) =>
-                    //     prevExperiences.filter(exp => exp.id !== experienceId)
-                    // );
+            try {
+                await axios.delete(route("extraActivity.destroy", experienceId));
 
-                    alert("Experience deleted successfully.");
-                },
-                onError: (errors) => {
-                    console.error("Error deleting experience:", errors);
-                    alert("Failed to delete experience. Please try again.");
-                }
-            });
+                // Show success toast
+                setToast({ show: true, message: "Experience deleted successfully!", variant: "success" });
+
+                refreshPage(); // Ensure this function is defined elsewhere
+            } catch (error) {
+                console.error("Error deleting experience:", error);
+
+                // Show error toast
+                setToast({ show: true, message: "Failed to delete experience. Please try again.", variant: "danger" });
+            }
         }
     };
 
     return (
         <div className="experiences-list">
+            <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
+
+
             <h2>Job Experiences</h2>
             <ul>
-                {extraActivity?.length > 0 ? extraActivity.map(experience => (
+                {extraActivity?.length > 0 ? extraActivity.map((experience,index) => (
                     <li key={experience.id} className="experience-item border p-4 mb-4 rounded shadow-sm">
                         <h3 className="font-semibold text-lg">{experience.job_title} at {experience.company_name}</h3>
                         <p>{experience.initial_date} - {experience.end_date ? experience.end_date : 'Present'}</p>
@@ -66,16 +80,6 @@ function ShowExtraActivity({ extraActivity, resumeId }) {
                           Edit
                         </button>
 
-                        <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Edit Experience</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                {selectedExperience && (
-                                    <EditExtraActivity experience={selectedExperience} resumeId={resumeId} />
-                                )}
-                            </Modal.Body>
-                        </Modal>
 
 
                         {/* <EditExperience experience={experience} resumeId={resumeId} /> */}
@@ -84,6 +88,18 @@ function ShowExtraActivity({ extraActivity, resumeId }) {
                     <p>No job experiences added yet.</p>
                 )}
             </ul>
+
+            <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Edit Experience</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                {selectedExperience && (
+                                    <EditExtraActivity refreshPage={refreshPage} experience={selectedExperience} resumeId={resumeId} />
+                                )}
+                            </Modal.Body>
+                        </Modal>
+
         </div>
     );
 }
