@@ -1,11 +1,18 @@
 import React, {useState} from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import EditExperience from './EditExperience';
-
+import ToastMessage from '@/Components/Utils/ToastMessage';
 
 import { Tab, Tabs,Button, Modal } from 'react-bootstrap';
 
-function ShowExperiences({ experiences, setExperiences, resumeId }) {
+function ShowExperiences({ experiences, setExperiences, resumeId ,refreshPage }) {
+
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
 
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [selectedExperience, setSelectedExperience] = useState(null);
@@ -20,28 +27,38 @@ function ShowExperiences({ experiences, setExperiences, resumeId }) {
         setSelectedExperience(null);
     };
 
-    // Function to handle the delete action
-    const handleDeleteEx = async (experienceId) => {
-        if (window.confirm("Are you sure you want to delete this experience?")) {
-            Inertia.delete(route('experiences.destroy', experienceId), {
-                onSuccess: () => {
-                    // Update the local state to remove the deleted experience
-                    setExperiences((prevExperiences) =>
-                        prevExperiences.filter(exp => exp.id !== experienceId)
-                    );
+// Function to handle the delete action
+const handleDeleteEx = async (experienceId) => {
+    if (window.confirm("Are you sure you want to delete this experience?")) {
+        try {
+            // Make the delete request using Axios
+            await axios.delete(route('experiences.destroy', experienceId));
 
-                    alert("Experience deleted successfully.");
-                },
-                onError: (errors) => {
-                    console.error("Error deleting experience:", errors);
-                    alert("Failed to delete experience. Please try again.");
-                }
-            });
+            // Update the local state to remove the deleted experience
+
+            // Show success toast
+            setToast({ show: true, message: "Experience deleted successfully!", variant: "success" });
+
+            // Refresh the page
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error("Error deleting experience:", error);
+
+            // Show error toast
+            setToast({ show: true, message: "Failed to delete experience. Please try again.", variant: "danger" });
         }
-    };
+    }
+};
+
 
     return (
         <div className="experiences-list">
+                        <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
             <h2>Job Experiences</h2>
             <ul>
                 {experiences.length > 0 ? experiences.map(experience => (
@@ -65,16 +82,7 @@ function ShowExperiences({ experiences, setExperiences, resumeId }) {
                           Edit
                         </button>
 
-                        <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Edit Experience</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                {selectedExperience && (
-                                    <EditExperience experience={selectedExperience} resumeId={resumeId} />
-                                )}
-                            </Modal.Body>
-                        </Modal>
+
 
 
                         {/* <EditExperience experience={experience} resumeId={resumeId} /> */}
@@ -83,6 +91,16 @@ function ShowExperiences({ experiences, setExperiences, resumeId }) {
                     <p>No job experiences added yet.</p>
                 )}
             </ul>
+            <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Edit Experience</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                {selectedExperience && (
+                                    <EditExperience refreshPage={refreshPage} experience={selectedExperience} resumeId={resumeId} />
+                                )}
+                            </Modal.Body>
+                        </Modal>
         </div>
     );
 }

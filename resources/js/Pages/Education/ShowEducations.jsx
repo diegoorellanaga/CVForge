@@ -2,8 +2,16 @@ import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import EditEducation from './EditEducation';
 import { Modal } from 'react-bootstrap';
-
+import ToastMessage from '@/Components/Utils/ToastMessage';
 function ShowEducations({ educations = [], setEducations, resumeId }) {
+
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
+
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [selectedEducation, setSelectedEducation] = useState(null);
 
@@ -36,6 +44,12 @@ function ShowEducations({ educations = [], setEducations, resumeId }) {
 
     return (
         <div className="educations-list">
+                        <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
             <h2 className="text-2xl font-bold mb-4">Education</h2>
             <ul className="space-y-4">
                 {educations.length > 0 ? (
@@ -71,22 +85,23 @@ function ShowEducations({ educations = [], setEducations, resumeId }) {
                             </div>
 
                             {/* Edit Modal */}
-                            <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Edit Education</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    {selectedEducation && (
-                                        <EditEducation education={selectedEducation} resumeId={resumeId} />
-                                    )}
-                                </Modal.Body>
-                            </Modal>
+
                         </li>
                     ))
                 ) : (
                     <p>No education entries added yet.</p>
                 )}
             </ul>
+            <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Edit Education</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    {selectedEducation && (
+                                        <EditEducation refreshPage={refreshPage} education={selectedEducation} resumeId={resumeId} />
+                                    )}
+                                </Modal.Body>
+                            </Modal>
         </div>
     );
 }

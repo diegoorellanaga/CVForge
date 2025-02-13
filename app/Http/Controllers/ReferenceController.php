@@ -30,7 +30,7 @@ class ReferenceController extends Controller
 
        // return response()->json(['message' => 'Reference created successfully', 'reference' => $reference], 201);
     
-        return redirect()->route('resumes.show', [$request->resume_id, "references"])->with('success', 'Reference added successfully.');
+       return response()->json(['message' => 'Reference added successfully.']);
     }
 
     /**
@@ -77,8 +77,7 @@ class ReferenceController extends Controller
         $reference->delete();
 
         // Redirect back with a success message
-        return redirect()->route('resumes.show', [$reference->resume_id, "references"])
-                         ->with('success', 'Reference deleted successfully.');
+        return response()->json(['message' => 'Reference deleted successfully.']);
     }
 
 

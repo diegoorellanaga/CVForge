@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import ToastMessage from '@/Components/Utils/ToastMessage';
+function AddExperience({ resumeId ,refreshPage }) {
 
-function AddExperience({ resumeId }) {
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
     
     const [formData, setFormData] = useState({
         initial_date: '',
@@ -13,13 +20,38 @@ function AddExperience({ resumeId }) {
         departure_reason: ''
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        Inertia.post(route('experiences.store', resumeId), formData);
+    
+        try {
+            // Send the POST request using Axios
+            const response = await axios.post(route('experiences.store', resumeId), formData);
+    
+            // Log success
+            console.log('Created successfully', response.data);
+    
+            // Show success toast
+            setToast({ show: true, message: "Experience Created successfully!", variant: "success" });
+    
+            // Refresh the page after successful creation
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error('Error creating:', error);
+    
+            // Show error toast
+            setToast({ show: true, message: "Failed to create experience. Please try again.", variant: "danger" });
+        }
     };
+    
 
     return (
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
+                       <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
             <div>
                 <label className="block text-sm font-medium text-gray-700">Initial Date</label>
                 <input

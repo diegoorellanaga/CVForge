@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
-
+import ToastMessage from '@/Components/Utils/ToastMessage';
 const EditReference = ({ resumeId, reference, refreshPage }) => {
+
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
     console.log("anychange?", reference)
     const [formData, setFormData] = useState({
         name: reference.name || "",
@@ -38,6 +45,12 @@ const EditReference = ({ resumeId, reference, refreshPage }) => {
 
     return (
         <div className="p-4 bg-white rounded-lg shadow-md">
+                        <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
             <h2 className="text-xl font-semibold mb-4">Edit Reference</h2>
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

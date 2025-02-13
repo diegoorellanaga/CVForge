@@ -33,7 +33,7 @@ class SkillController extends Controller
         ]);
 
         // Redirect back with a success message
-        return redirect()->route('resumes.show', [$resumeId, "skills"])->with('success', 'Skill added successfully.');
+        return response()->json(['message' => 'Skill added successfully.']);
     }
 
     public function destroy($skillId)
@@ -45,8 +45,7 @@ class SkillController extends Controller
         $skill->delete();
 
         // Redirect back with a success message
-        return redirect()->route('resumes.show', [$skill->resume_id, "skills"])
-                         ->with('success', 'Skill deleted successfully.');
+        return response()->json(['message' => 'Skill deleted successfully.']);
     }
 
     public function update(Request $request, $resumeId, $skillId)
@@ -93,8 +92,7 @@ class SkillController extends Controller
         Log::debug('Updated Skill Data:', $skill->toArray());
     
         // Redirect back to the resume page with a success message
-        return redirect()->route('resumes.show', [$skill->resume_id, "skills"])
-                         ->with('success', 'Skill updated successfully.');
+        return response()->json(['message' => 'Skill updated successfully.']);
     }
 
     // Other methods like index, show, etc.

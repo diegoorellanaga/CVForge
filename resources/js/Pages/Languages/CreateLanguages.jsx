@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
+import ToastMessage from '@/Components/Utils/ToastMessage';
+function CreateLanguage({ resumeId,refreshPage  }) {
 
-function CreateLanguage({ resumeId }) {
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
     const [formData, setFormData] = useState({
         language: "",
         proficiency: "",
@@ -18,98 +25,102 @@ function CreateLanguage({ resumeId }) {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        Inertia.post(route("languages.store", resumeId), formData, {
-            onSuccess: () => {
-                alert("Language added successfully!");
-                setFormData({
-                    language: "",
-                    proficiency: "",
-                    test: false,
-                });
-                setErrors({});
-            },
-            onError: (errors) => {
-                setErrors(errors);
-            },
-        });
+    
+        try {
+            const response = await axios.post(route("languages.store", resumeId), formData);
+    
+            // Show success toast
+            setToast({ show: true, message: "Language added successfully!", variant: "success" });
+    
+            // Reset form data and errors
+            setFormData({
+                language: "",
+                proficiency: "",
+                test: false,
+            });
+            setErrors({});
+    
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error("Error adding language:", error);
+    
+            // Show error toast
+            setToast({ show: true, message: "Failed to add language. Please try again.", variant: "danger" });
+        }
     };
+    
 
     return (
-        <div className="create-language">
-            <h2 className="text-xl font-bold mb-4">Add New Language</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Language */}
-                <div>
-                    <label htmlFor="language" className="block font-medium">
-                        Language
-                    </label>
-                    <input
-                        type="text"
-                        id="language"
-                        name="language"
-                        value={formData.language}
-                        onChange={handleChange}
-                        className={`w-full p-2 border ${
-                            errors.language ? "border-red-500" : "border-gray-300"
-                        } rounded`}
-                        placeholder="Enter language"
-                    />
-                    {errors.language && (
-                        <p className="text-red-500 text-sm">{errors.language}</p>
-                    )}
-                </div>
+<form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
+    <ToastMessage 
+        show={toast.show} 
+        onClose={() => setToast((prev) => ({ ...prev, show: false }))}
+        message={toast.message} 
+        variant={toast.variant} 
+    />
 
-                {/* Proficiency */}
-                <div>
-                    <label htmlFor="proficiency" className="block font-medium">
-                        Proficiency
-                    </label>
-                    <select
-                        id="proficiency"
-                        name="proficiency"
-                        value={formData.proficiency}
-                        onChange={handleChange}
-                        className={`w-full p-2 border ${
-                            errors.proficiency ? "border-red-500" : "border-gray-300"
-                        } rounded`}
-                    >
-                        <option value="">Select Proficiency</option>
-                        <option value="Beginner">Beginner</option>
-                        <option value="Intermediate">Intermediate</option>
-                        <option value="Fluent">Fluent</option>
-                    </select>
-                    {errors.proficiency && (
-                        <p className="text-red-500 text-sm">{errors.proficiency}</p>
-                    )}
-                </div>
+    {/* Language */}
+    <div>
+        <label htmlFor="language" className="block text-sm font-medium text-gray-700">Language</label>
+        <input
+            type="text"
+            id="language"
+            name="language"
+            value={formData.language}
+            onChange={handleChange}
+            className={`mt-1 p-2 block w-full border ${errors.language ? "border-red-500" : "border-gray-300"} rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+            placeholder="Enter language"
+        />
+        {errors.language && (
+            <p className="text-red-500 text-xs">{errors.language}</p>
+        )}
+    </div>
 
-                {/* Test */}
-                <div className="flex items-center">
-                    <input
-                        type="checkbox"
-                        id="test"
-                        name="test"
-                        checked={formData.test}
-                        onChange={handleChange}
-                        className="mr-2"
-                    />
-                    <label htmlFor="test" className="font-medium">
-                        Test Taken
-                    </label>
-                </div>
+    {/* Proficiency */}
+    <div>
+        <label htmlFor="proficiency" className="block text-sm font-medium text-gray-700">Proficiency</label>
+        <select
+            id="proficiency"
+            name="proficiency"
+            value={formData.proficiency}
+            onChange={handleChange}
+            className={`mt-1 p-2 block w-full border ${errors.proficiency ? "border-red-500" : "border-gray-300"} rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+        >
+            <option value="">Select Proficiency</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Fluent">Fluent</option>
+        </select>
+        {errors.proficiency && (
+            <p className="text-red-500 text-xs">{errors.proficiency}</p>
+        )}
+    </div>
 
-                {/* Submit Button */}
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-                >
-                    Add Language
-                </button>
-            </form>
-        </div>
+    {/* Test */}
+    <div className="flex items-center">
+        <input
+            type="checkbox"
+            id="test"
+            name="test"
+            checked={formData.test}
+            onChange={handleChange}
+            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+        />
+        <label htmlFor="test" className="ml-2 text-sm text-gray-700">Test Taken</label>
+    </div>
+
+    {/* Submit Button */}
+    <button
+        type="submit"
+        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+        Add Language
+    </button>
+</form>
+
+    
     );
 }
 

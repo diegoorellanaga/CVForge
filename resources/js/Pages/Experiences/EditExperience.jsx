@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import ToastMessage from '@/Components/Utils/ToastMessage';
+function EditExperience({ experience, resumeId,refreshPage  }) {
 
-function EditExperience({ experience, resumeId }) {
+
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
     const [formData, setFormData] = useState({
         initial_date: '',
         end_date: '',
@@ -27,14 +35,38 @@ function EditExperience({ experience, resumeId }) {
         });
     }, [experience]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Use Inertia's put method to update the experience
-        Inertia.put(route('experiences.update', [resumeId, experience.id]), formData);
+    
+        try {
+            // Send the PUT request using Axios
+            const response = await axios.put(route('experiences.update', [resumeId, experience.id]), formData);
+            
+            // Log success
+            console.log('Updated successfully', response.data);
+            
+            // Show success toast
+            setToast({ show: true, message: "Experience edited successfully!", variant: "success" });
+    
+            // Refresh the page after successful update
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error('Error updating:', error);
+    
+            // Show error toast
+            setToast({ show: true, message: "Failed to edit experience. Please try again.", variant: "danger" });
+        }
     };
+    
 
     return (
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
+                       <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
             <div>
                 <label className="block text-sm font-medium text-gray-700">Initial Date</label>
                 <input

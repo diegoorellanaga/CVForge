@@ -32,7 +32,7 @@ class EducationController extends Controller
             'place' => $request->place,
         ]);
 
-        return redirect()->route('resumes.show', [$resumeId, 'education'])->with('success', 'Education added successfully.');
+        return response()->json(['message' => 'Education added successfully.']);
     }
 
     public function destroy($educationId)
@@ -41,7 +41,7 @@ class EducationController extends Controller
         $education = Education::findOrFail($educationId);
         $education->delete();
 
-        return redirect()->route('resumes.show', [$education->resume_id, 'education'])->with('success', 'Education deleted successfully.');
+        return response()->json(['message' => 'Education deleted successfully.']);
     }
 
     public function update(Request $request, $resumeId, $educationId)
@@ -61,6 +61,6 @@ class EducationController extends Controller
         $education = Education::findOrFail($educationId);
         $education->update($request->all());
 
-        return redirect()->route('resumes.show', [$resumeId, 'education'])->with('success', 'Education updated successfully.');
+        return response()->json(['message' => 'Education updated successfully.']);
     }
 }

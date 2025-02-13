@@ -23,7 +23,7 @@ class LanguageController extends Controller
 
         $language = $resume->languages()->create($validated);
 
-        return redirect()->back()->with('success', 'Language added successfully.');
+        return response()->json(['message' => 'Language added successfully.']);
     }
 
     /**
@@ -40,7 +40,7 @@ class LanguageController extends Controller
         $language = Language::findOrFail($id);
         $language->update($validated);
 
-        return redirect()->route('resumes.show', [$resumeId, 'languages'])->with('success', 'language updated successfully.');
+        return response()->json(['message' => 'Language updated successfully.']);
     }
 
     /**
@@ -51,6 +51,6 @@ class LanguageController extends Controller
         $language = Language::findOrFail($id);
         $language->delete();
 
-        return redirect()->back()->with('success', 'Language deleted successfully.');
+        return response()->json(['message' => 'Language deleted successfully.']);
     }
 }

@@ -3,8 +3,15 @@ import { Inertia } from "@inertiajs/inertia";
 
 import EditLanguage from "./EditLanguages";
 import { Modal } from "react-bootstrap";
-
-function ShowLanguages({ languages, setLanguages, resumeId }) {
+import ToastMessage from '@/Components/Utils/ToastMessage';
+function ShowLanguages({ languages, setLanguages, resumeId,refreshPage  }) {
+    
+        const [toast, setToast] = useState({
+            show: false,
+            message: "",
+            variant: "success",
+        });
+    
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState(null);
 
@@ -20,25 +27,31 @@ function ShowLanguages({ languages, setLanguages, resumeId }) {
 
     const handleDeleteLanguage = async (languageId) => {
         if (window.confirm("Are you sure you want to delete this language?")) {
-            Inertia.delete(route("languages.destroy", languageId), {
-                onSuccess: () => {
-                    // Update the local state to remove the deleted language
-                    setLanguages((prevLanguages) =>
-                        prevLanguages.filter((language) => language.id !== languageId)
-                    );
-
-                    alert("Language deleted successfully.");
-                },
-                onError: (errors) => {
-                    console.error("Error deleting language:", errors);
-                    alert("Failed to delete language. Please try again.");
-                },
-            });
+            try {
+                await axios.delete(route("languages.destroy", languageId));
+    
+                // Show success toast
+                setToast({ show: true, message: "Language deleted successfully!", variant: "success" });
+    
+                refreshPage(); // Ensure this function is defined elsewhere
+            } catch (error) {
+                console.error("Error deleting language:", error);
+    
+                // Show error toast
+                setToast({ show: true, message: "Failed to delete language. Please try again.", variant: "danger" });
+            }
         }
     };
+    
 
     return (
         <div className="languages-list">
+                        <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
             <h2 className="text-2xl font-bold mb-4">Languages</h2>
             <ul>
                 {languages && languages.length > 0 ? (
@@ -65,25 +78,29 @@ function ShowLanguages({ languages, setLanguages, resumeId }) {
                             </button>
 
                             {/* Edit Modal */}
-                            <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Edit Language</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    {selectedLanguage && (
-                                        <EditLanguage
-                                            language={selectedLanguage}
-                                            resumeId={resumeId}
-                                        />
-                                    )}
-                                </Modal.Body>
-                            </Modal>
+
                         </li>
                     ))
                 ) : (
                     <p>No languages added yet.</p>
                 )}
             </ul>
+
+            <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Edit Language</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    {selectedLanguage && (
+                                        <EditLanguage
+                                        refreshPage={refreshPage}
+                                            language={selectedLanguage}
+                                            resumeId={resumeId}
+                                        />
+                                    )}
+                                </Modal.Body>
+                            </Modal>
+
         </div>
     );
 }

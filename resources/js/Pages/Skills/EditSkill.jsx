@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import ToastMessage from '@/Components/Utils/ToastMessage';
+function EditSkill({ skill, resumeId ,refreshPage }) {
 
-function EditSkill({ skill, resumeId }) {
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
     const [formData, setFormData] = useState({
         skill_name: '',
         skill_category: '',
@@ -23,9 +30,9 @@ function EditSkill({ skill, resumeId }) {
         });
     }, [skill]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         // Convert the formData fields to the correct types
         const updatedFormData = {
             skill_name: formData.skill_name,
@@ -35,9 +42,19 @@ function EditSkill({ skill, resumeId }) {
             certificate: formData.certificate === true, // Ensure certificate is a boolean
             skill_order: parseInt(formData.skill_order, 10) // Convert skill_order to integer
         };
-
-        // Use Inertia's put method to update the skill
-        Inertia.put(route('skills.update', [resumeId, skill.id]), updatedFormData);
+    
+        try {
+            const response = await axios.put(route("skills.update", [resumeId, skill.id]), updatedFormData);
+            console.log("Updated successfully", response.data);
+    
+            setToast({ show: true, message: "Skill edited successfully!", variant: "success" });
+    
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error("Error updating:", error);
+    
+            setToast({ show: true, message: "Failed to edit skill. Please try again.", variant: "danger" });
+        }
     };
 
     return (
@@ -122,6 +139,12 @@ function EditSkill({ skill, resumeId }) {
             >
                 Update Skill
             </button>
+            <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
         </form>
     );
 }

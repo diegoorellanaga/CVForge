@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
-
+import ToastMessage from '@/Components/Utils/ToastMessage';
 function AddEducation({ resumeId }) {
+
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
     const [formData, setFormData] = useState({
         initial_date: '',
         graduation_date: '',
@@ -19,6 +26,12 @@ function AddEducation({ resumeId }) {
 
     return (
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
+                      <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
             <div>
                 <label className="block text-sm font-medium text-gray-700">Initial Date</label>
                 <input

@@ -19,6 +19,7 @@ const refreshPage = () => {
 
 
 function ShowReferences({ references, setReferences, resumeId, refreshPage }) {
+   
     console.log("anychange upper", references)
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [selectedReference, setSelectedReference] = useState(null);
@@ -39,26 +40,26 @@ function ShowReferences({ references, setReferences, resumeId, refreshPage }) {
         variant: "success",
     });
 
-// Inertia.delete(route('skills.destroy', skillId), {
     const handleDeleteReference = async (referenceId) => {
-        console.log(referenceId)
+        console.log(referenceId);
+        
         if (window.confirm("Are you sure you want to delete this reference?")) {
-            Inertia.delete(route("references.destroy", referenceId), {
-                onSuccess: () => {
-                    // Update the local state to remove the deleted reference
-                    // setReferences((prevReferences) =>
-                    //     prevReferences.filter(reference => reference.id !== referenceId)
-                    // );
-
-                    alert("Reference deleted successfully.");
-                },
-                onError: (errors) => {
-                    console.error("Error deleting reference:", errors);
-                    alert("Failed to delete reference. Please try again.");
-                },
-            });
+            try {
+                await axios.delete(route("references.destroy", referenceId));
+    
+                // Show success toast
+                setToast({ show: true, message: "Reference deleted successfully!", variant: "success" });
+    
+                refreshPage(); // Ensure this function is defined elsewhere
+            } catch (error) {
+                console.error("Error deleting reference:", error);
+    
+                // Show error toast
+                setToast({ show: true, message: "Failed to delete reference. Please try again.", variant: "danger" });
+            }
         }
     };
+    
 
     return (
         <div className="references-list">
@@ -96,7 +97,15 @@ function ShowReferences({ references, setReferences, resumeId, refreshPage }) {
                             </button>
 
                             {/* Edit modal */}
-                            <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
+
+                        </li>
+                    ))
+                ) : (
+                    <p>No references added yet.</p>
+                )}
+            </ul>
+
+            <Modal show={isEditModalOpen} onHide={handleEditClose} keyboard={true}>
                                 <Modal.Header closeButton>
                                     <Modal.Title>Edit Reference</Modal.Title>
                                 </Modal.Header>
@@ -110,12 +119,7 @@ function ShowReferences({ references, setReferences, resumeId, refreshPage }) {
                                     )}
                                 </Modal.Body>
                             </Modal>
-                        </li>
-                    ))
-                ) : (
-                    <p>No references added yet.</p>
-                )}
-            </ul>
+
         </div>
     );
 }

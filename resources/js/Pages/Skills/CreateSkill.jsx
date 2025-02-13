@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import ToastMessage from '@/Components/Utils/ToastMessage';
+function AddSkill({ resumeId ,refreshPage }) {
 
-function AddSkill({ resumeId }) {
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
     
     const [formData, setFormData] = useState({
         skill_name: '',
@@ -12,10 +19,23 @@ function AddSkill({ resumeId }) {
         certificate: false // Boolean, whether the skill has a certificate
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        Inertia.post(route('skills.store', resumeId), formData); // Make sure your route is correctly set up
+    
+        try {
+            const response = await axios.post(route("skills.store", resumeId), formData);
+            console.log("Created successfully", response.data);
+    
+            setToast({ show: true, message: "Skill created successfully!", variant: "success" });
+    
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error("Error creating skill:", error);
+    
+            setToast({ show: true, message: "Failed to create skill. Please try again.", variant: "danger" });
+        }
     };
+    
 
     return (
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
@@ -93,6 +113,12 @@ function AddSkill({ resumeId }) {
             >
                 Add Skill
             </button>
+            <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
         </form>
     );
 }

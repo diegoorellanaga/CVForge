@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
+import ToastMessage from '@/Components/Utils/ToastMessage';
+const CreateReference = ({ resumeId ,refreshPage }) => {
 
-const CreateReference = ({ resumeId }) => {
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
     const [formData, setFormData] = useState({
         name: "",
         last_name: "",
@@ -21,30 +28,48 @@ const CreateReference = ({ resumeId }) => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        Inertia.post(`/references`, { ...formData, resume_id: resumeId }, {
-            onError: (err) => {
-                setErrors(err);
-            },
-            onSuccess: () => {
-                setFormData({
-                    name: "",
-                    last_name: "",
-                    email: "",
-                    phone: "",
-                    company_name: "",
-                    position: "",
-                    relation: "",
-                });
-                setErrors({});
-            },
-        });
+    
+        // Prepare formData with resume_id
+        const data = { ...formData, resume_id: resumeId };
+    
+        try {
+            const response = await axios.post('/references', data);
+    
+            // Show success toast
+            setToast({ show: true, message: "Reference created successfully!", variant: "success" });
+    
+            // Reset form data and errors
+            // setFormData({
+            //     name: "",
+            //     last_name: "",
+            //     email: "",
+            //     phone: "",
+            //     company_name: "",
+            //     position: "",
+            //     relation: "",
+            // });
+            setErrors({});
+    
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error("Error creating reference:", error);
+    
+            // Show error toast
+            setToast({ show: true, message: "Failed to create reference. Please try again.", variant: "danger" });
+        }
     };
+    
 
     return (
         <div className="p-4 bg-white rounded-lg shadow-md">
+                        <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
             <h2 className="text-xl font-semibold mb-4">Add a New Reference</h2>
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

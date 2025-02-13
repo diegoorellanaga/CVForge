@@ -35,7 +35,7 @@ class ExperienceController extends Controller
             'departure_reason' => $request->departure_reason,
         ]);
         // Redirect back with a success message
-        return redirect()->route('resumes.show', [$resumeId, "experiences"])->with('success', 'Experience added successfully.');
+        return response()->json(['message' => 'Experience added successfully.']);
       //  return redirect()->route('resumes.index', $resumeId)->with('success', 'Experience added successfully');
     }
 
@@ -48,8 +48,7 @@ class ExperienceController extends Controller
         $experience->delete();
 
         // Redirect back with a success message
-        return redirect()->route('resumes.show', [$experience->resume_id,"experiences"])
-                         ->with('success', 'Experience deleted successfully.');
+        return response()->json(['message' => 'Experience deleted successfully.']);
     }
 
     public function update(Request $request, $resume_id, $experienceId)
@@ -82,8 +81,7 @@ class ExperienceController extends Controller
         ]);
 
         // Redirect back to the resume page with a success message
-        return redirect()->route('resumes.show', [$experience->resume_id,"experiences"])
-                         ->with('success', 'Experience updated successfully.');
+        return response()->json(['message' => 'Experience updated successfully.']);
     }
 
     // Other methods like update, destroy, etc.

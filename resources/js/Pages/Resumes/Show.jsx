@@ -52,11 +52,16 @@ function Show({ resume, user, activeTab }) {
 console.log("resume referece", resume.references)
 const references = resume.references
 const extraActivity = resume.extraactivities
-    const [experiences, setExperiences] = useState(resume.experiences);
-    const [skills, setSkills] = useState(resume.skills);
-    const [educations, setEducations] = useState(resume.educations);
+const skills = resume.skills
+const experiences = resume.experiences
+const educations = resume.educations
+const languages = resume.languages
+
+    //const [experiences, setExperiences] = useState(resume.experiences);
+   // const [skills, setSkills] = useState(resume.skills);
+    //const [educations, setEducations] = useState(resume.educations);
    // const [references, setReferences] = useState(resume.references);
-    const [languages, setLanguages] = useState(resume.languages);
+   // const [languages, setLanguages] = useState(resume.languages);
     //const [extraActivity, setExtraActivity] = useState(resume.extraactivities);
 
     const [isAddExperienceModalOpen, setAddExperienceModalOpen] = useState(false);
@@ -111,9 +116,9 @@ const extraActivity = resume.extraactivities
                         <Button onClick={handleAddExperienceOpen} variant="primary">
                             Add Experience
                         </Button>
-                        <ShowExperiences experiences={experiences} setExperiences={setExperiences} resumeId={resume.resume_id} />
+                        <ShowExperiences refreshPage={refreshPage}  experiences={experiences}  resumeId={resume.resume_id} />
                         <Modal show={isAddExperienceModalOpen} onClose={handleAddExperienceClose}>
-                            <AddExperience resumeId={resume.resume_id} />
+                            <AddExperience refreshPage={refreshPage}  resumeId={resume.resume_id} />
                         </Modal>
                     </Tab>
 
@@ -122,9 +127,9 @@ const extraActivity = resume.extraactivities
                         <Button onClick={handleAddSkillOpen} variant="primary">
                             Add Skill
                         </Button>
-                        <ShowSkills skills={skills} setSkills={setSkills} resumeId={resume.resume_id} />
+                        <ShowSkills refreshPage={refreshPage}  skills={skills} resumeId={resume.resume_id} />
                         <Modal show={isAddSkillModalOpen} onClose={handleAddSkillClose}>
-                            <AddSkill resumeId={resume.resume_id} />
+                            <AddSkill refreshPage={refreshPage}  resumeId={resume.resume_id} />
                         </Modal>
                     </Tab>
 
@@ -133,9 +138,9 @@ const extraActivity = resume.extraactivities
                         <Button onClick={handleAddEducationOpen} variant="primary">
                             Add Education
                         </Button>
-                        <ShowEducations educations={educations} setEducations={setEducations} resumeId={resume.resume_id} />
+                        <ShowEducations refreshPage={refreshPage}  educations={educations} resumeId={resume.resume_id} />
                         <Modal show={isAddEducationModalOpen} onClose={handleAddEducationClose}>
-                            <AddEducation resumeId={resume.resume_id} />
+                            <AddEducation refreshPage={refreshPage}  resumeId={resume.resume_id} />
                         </Modal>
                     </Tab>
                     <Tab eventKey="references" title="References">
@@ -144,7 +149,7 @@ const extraActivity = resume.extraactivities
                         </Button>
                         <ShowReferences refreshPage={refreshPage} references={references} resumeId={resume.resume_id} />
                         <Modal show={isAddReferenceModalOpen} onClose={handleAddReferenceClose}>
-                            <CreateReference resumeId={resume.resume_id} />
+                            <CreateReference refreshPage={refreshPage}  resumeId={resume.resume_id} />
                         </Modal>
                     </Tab>
 
@@ -152,10 +157,10 @@ const extraActivity = resume.extraactivities
                         <Button onClick={handleAddLanguageOpen} variant="primary">
                             Add Language
                         </Button>
-                        <ShowLanguages languages={languages} setLanguages={setLanguages} resumeId={resume.resume_id} />
+                        <ShowLanguages refreshPage={refreshPage}  languages={languages} resumeId={resume.resume_id} />
 
                         <Modal show={isAddLanguageModalOpen} onClose={handleAddLanguageClose}>
-                            <CreateLanguage resumeId={resume.resume_id} />
+                            <CreateLanguage refreshPage={refreshPage}  resumeId={resume.resume_id} />
                         </Modal>
                     </Tab>
 
