@@ -81,7 +81,8 @@ class HeaderController extends Controller
             return back()->withErrors(['error' => 'Unable to create header.']);
         }
     
-        return redirect()->route('resumes.show', [$resumeId, "header"]);
+        return response()->json(['message' => 'Reference updated successfully.']);
+
     }
 
     // Show a form to edit an existing header
@@ -94,6 +95,7 @@ class HeaderController extends Controller
             'header' => $header,
             'user' => $user,
         ]);
+ 
     }
 
     // Update an existing header
@@ -102,12 +104,12 @@ class HeaderController extends Controller
         \Log::info("Resume ID: $resumeId, Header ID: $headerId");
         $request->validate([
             'image_url' => 'nullable|url',
-            'summary' => 'required|string',
+            'professional_summary' => 'required|string',
             'phone' => 'nullable|string|max:15',
             'email' => 'nullable|email',
             'location' => 'nullable|string|max:100',
             'personal_site' => 'nullable|url',
-            'name' => 'required|string|max:100',
+            'name' => 'nullable|string|max:100',
             'professional_title' => 'required|string|max:100',
             'current_company' => 'nullable|string|max:100',
             'current_position' => 'nullable|string|max:100',
@@ -116,7 +118,7 @@ class HeaderController extends Controller
         $header = Header::findOrFail($headerId);
         $header->update([
             'image_url' => $request->image_url,
-            'professional_summary' => $request->summary,
+            'professional_summary' => $request->professional_summary,
             'phone' => $request->phone,
             'email' => $request->email,
             'location' => $request->location,
@@ -127,6 +129,7 @@ class HeaderController extends Controller
             'current_position' => $request->current_position,
         ]);
 
-        return redirect()->route('resumes.show', [$header->resume_id, "header"]);
+        return response()->json(['message' => 'Reference updated successfully.']);
+
     }
 }

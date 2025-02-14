@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import ToastMessage from '@/Components/Utils/ToastMessage';
-function AddEducation({ resumeId }) {
+function AddEducation({ resumeId,refreshPage }) {
 
     const [toast, setToast] = useState({
         show: false,
@@ -19,10 +19,23 @@ function AddEducation({ resumeId }) {
         description: ''
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        Inertia.post(route('education.store', resumeId), formData);
+    
+        try {
+            const response = await axios.post(route('education.store', resumeId), formData);
+            console.log('Created successfully', response.data);
+    
+            setToast({ show: true, message: "Education created successfully!", variant: "success" });
+    
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error('Error creating:', error);
+            
+            setToast({ show: true, message: "Failed to create education. Please try again.", variant: "danger" });
+        }
     };
+    
 
     return (
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">

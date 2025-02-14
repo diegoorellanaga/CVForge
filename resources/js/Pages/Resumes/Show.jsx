@@ -18,6 +18,7 @@ import ShowLanguages from '../Languages/ShowLanguages';
 import ShowExtraActivity from '../ExtraActivities/ShowExtraActivity';
 import CreateExtraActivity from '../ExtraActivities/CreateExtraActivity';
 import { Inertia } from '@inertiajs/inertia';
+import ImageUpload from '@/Components/Utils/ImageUpload';
 
 
 import { Tab, Tabs, Button, Row, Col } from 'react-bootstrap';
@@ -64,6 +65,8 @@ const languages = resume.languages
    // const [languages, setLanguages] = useState(resume.languages);
     //const [extraActivity, setExtraActivity] = useState(resume.extraactivities);
 
+    const [imageToShow, setImageToShow] = useState("");
+
     const [isAddExperienceModalOpen, setAddExperienceModalOpen] = useState(false);
     const [isAddSkillModalOpen, setAddSkillModalOpen] = useState(false);
     const [isAddEducationModalOpen, setAddEducationModalOpen] = useState(false);
@@ -93,6 +96,7 @@ const languages = resume.languages
     return (
         <AuthenticatedLayout user={user}>
             <Row>
+                <ImageUpload imageToShow={imageToShow} setImageToShow={setImageToShow} />
                 <Col>
             <div className="max-w-2xl mx-auto bg-white p-6 shadow-md rounded-lg">
                 <h1 className="text-2xl font-semibold text-gray-800 mb-6">{resume.title}</h1>
@@ -107,7 +111,7 @@ const languages = resume.languages
                         </Button>
                         {resume.header ? <ShowHeader header={resume.header} /> : "No header available"}
                         <Modal show={isAddHeaderModalOpen} onClose={handleAddHeaderClose}>
-                            <AddHeader resumeId={resume.resume_id} existingHeader={resume.header} />
+                            <AddHeader refreshPage={refreshPage} resumeId={resume.resume_id} existingHeader={resume.header} />
                         </Modal>
                     </Tab>
 
@@ -181,7 +185,7 @@ const languages = resume.languages
             </div>
             </Col>
             <Col>
-            <PdfPreviewer  header={resume.header} experiences={resume.experiences} skills={resume.skills} education={resume.educations}/>
+            <PdfPreviewer imgURL={imageToShow}  header={resume.header} experiences={resume.experiences} skills={resume.skills} education={resume.educations}/>
             </Col>
             </Row>
         </AuthenticatedLayout>

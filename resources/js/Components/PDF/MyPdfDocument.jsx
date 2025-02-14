@@ -77,14 +77,14 @@ const styles = StyleSheet.create({
     timelineJobTitle: {fontSize: 12,marginBottom:"5px", fontWeight: 'bold', color: '#333' },
 });
 
-const MyPdfDocument = ({ header, experiences, skills, education }) => (
+const MyPdfDocument = ({ header, experiences, skills, education, imgURL }) => (
     <Document>
         <Page size="A4" style={styles.page}>
             {/* Left Column */}
             <View style={styles.leftColumn}>
                 {/* Profile Image */}
                 <View style={styles.imageContainer}>
-                <Image style={styles.profileImage} src={'https://static.vecteezy.com/system/resources/previews/022/713/469/non_2x/cute-cat-isolated-on-solid-background-free-photo.jpg'} />
+                {imgURL && <Image style={styles.profileImage} src={imgURL} />}
                 </View>
                 {/* Contact Info */}
                 <View>

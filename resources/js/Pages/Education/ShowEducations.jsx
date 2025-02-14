@@ -3,7 +3,7 @@ import { Inertia } from '@inertiajs/inertia';
 import EditEducation from './EditEducation';
 import { Modal } from 'react-bootstrap';
 import ToastMessage from '@/Components/Utils/ToastMessage';
-function ShowEducations({ educations = [], setEducations, resumeId }) {
+function ShowEducations({ educations = [], setEducations, resumeId, refreshPage }) {
 
     const [toast, setToast] = useState({
         show: false,
@@ -27,18 +27,19 @@ function ShowEducations({ educations = [], setEducations, resumeId }) {
 
     const handleDeleteEd = async (educationId) => {
         if (window.confirm("Are you sure you want to delete this education?")) {
-            Inertia.delete(route('education.destroy', educationId), {
-                onSuccess: () => {
-                    setEducations((prevEducations) =>
-                        prevEducations.filter(edu => edu.id !== educationId)
-                    );
-                    alert("Education deleted successfully.");
-                },
-                onError: (errors) => {
-                    console.error("Error deleting education:", errors);
-                    alert("Failed to delete education. Please try again.");
-                }
-            });
+            try {
+                await axios.delete(route("education.destroy", educationId));
+    
+                // Show success toast
+                setToast({ show: true, message: "Education deleted successfully!", variant: "success" });
+                refreshPage(); 
+
+            } catch (error) {
+                console.error("Error deleting education:", error);
+    
+                // Show error toast
+                setToast({ show: true, message: "Failed to delete education. Please try again.", variant: "danger" });
+            }
         }
     };
 

@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import ToastMessage from '@/Components/Utils/ToastMessage';
+function AddHeader({ resumeId, existingHeader, refreshPage }) {
 
-function AddHeader({ resumeId, existingHeader }) {
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        variant: "success",
+    });
+
     // Set initial form data based on whether an existing header is passed
     const [formData, setFormData] = useState({
         image_url: existingHeader ? existingHeader.image_url : '',
@@ -17,21 +24,41 @@ function AddHeader({ resumeId, existingHeader }) {
     });
 
     // Handle form submission, either updating or creating the header
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (existingHeader) {
-            console.log(route('headers.update', [resumeId, existingHeader.id]));
-            // Send a PUT request to update the existing header
-            Inertia.put(route('headers.update', [resumeId, existingHeader.id]), formData);
-
-        } else {
-            // Send a POST request to create a new header
-            Inertia.post(route('headers.store', resumeId), formData);
+    
+        try {
+            let response;
+    
+            if (existingHeader) {
+                console.log(route('headers.update', [resumeId, existingHeader.id]));
+                // Send a PUT request to update the existing header
+                response = await axios.put(route('headers.update', [resumeId, existingHeader.id]), formData);
+                setToast({ show: true, message: "Header updated successfully!", variant: "success" });
+            } else {
+                // Send a POST request to create a new header
+                response = await axios.post(route('headers.store', resumeId), formData);
+                setToast({ show: true, message: "Header created successfully!", variant: "success" });
+            }
+    
+            console.log('Success:', response.data);
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error('Error submitting header:', error);
+            setToast({ show: true, message: "Failed to submit header. Please try again.", variant: "danger" });
         }
     };
+    
 
     return (
         <form onSubmit={handleSubmit} style={{maxHeight:"80vh",overflowY:"scroll"}} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
+            <ToastMessage 
+                show={toast.show} 
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+                message={toast.message} 
+                variant={toast.variant} 
+            />
+           
             <div>
                 <label className="block text-sm font-medium text-gray-700">Image URL</label>
                 <input

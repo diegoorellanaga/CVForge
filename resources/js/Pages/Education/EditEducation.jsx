@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import ToastMessage from '@/Components/Utils/ToastMessage';
-function EditEducation({ education, resumeId }) {
+function EditEducation({ education, resumeId, refreshPage }) {
 
     const [toast, setToast] = useState({
         show: false,
@@ -31,10 +31,23 @@ function EditEducation({ education, resumeId }) {
         });
     }, [education]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        Inertia.put(route('education.update', [resumeId, education.id]), formData);
+        
+        try {
+            const response = await axios.put(route('education.update', [resumeId, education.id]), formData);
+            console.log('Updated successfully', response.data);
+            
+            setToast({ show: true, message: "Education edited successfully!", variant: "success" });
+    
+            refreshPage(); // Ensure this function is defined elsewhere
+        } catch (error) {
+            console.error('Error updating:', error);
+            
+            setToast({ show: true, message: "Failed to edit education. Please try again.", variant: "danger" });
+        }
     };
+    
 
     return (
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 shadow-md rounded-md space-y-4">
