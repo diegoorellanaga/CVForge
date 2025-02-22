@@ -96,7 +96,6 @@ const languages = resume.languages
     return (
         <AuthenticatedLayout user={user}>
             <Row>
-                <ImageUpload imageToShow={imageToShow} setImageToShow={setImageToShow} />
                 <Col>
             <div className="max-w-2xl mx-auto bg-white p-6 shadow-md rounded-lg">
                 <h1 className="text-2xl font-semibold text-gray-800 mb-6">{resume.title}</h1>
@@ -179,13 +178,18 @@ const languages = resume.languages
                         </Modal>
                     </Tab>
 
+                    <Tab eventKey="imagePhoto" title="Image">
+                    <ImageUpload imageToShow={imageToShow} setImageToShow={setImageToShow} />
+                    </Tab>
+
+
 
 
                 </Tabs>
             </div>
             </Col>
             <Col>
-            <PdfPreviewer imgURL={imageToShow}  header={resume.header} experiences={resume.experiences} skills={resume.skills} education={resume.educations}/>
+            <PdfPreviewer extraactivities={resume.extraactivities} languages={resume.languages} references={resume.references} imgURL={imageToShow}  header={resume.header} experiences={resume.experiences} skills={resume.skills} education={resume.educations}/>
             </Col>
             </Row>
         </AuthenticatedLayout>

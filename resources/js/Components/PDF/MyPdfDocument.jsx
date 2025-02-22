@@ -44,8 +44,18 @@ const styles = StyleSheet.create({
     contactText: {fontFamily: 'Helvetica', fontSize: 9, marginBottom: 10, color: "#D3D3D3"},
     educationTitle: {fontFamily: 'Helvetica', marginTop: 10, fontSize: 10, color: "#D3D3D3", marginBottom: 2 },
     educationText: {fontFamily: 'Helvetica', fontSize: 9, marginBottom: 2, color: "white",fontWeight: '1000'},
-    skillsList: {fontFamily: 'Helvetica', marginLeft: 0, marginTop: 10 },
-    skillItem: { fontFamily: 'Helvetica',fontSize: 10,marginBottom: 12, marginLeft: 0, color: "#D3D3D3"},
+    skillsList: {fontFamily: 'Helvetica', marginLeft: 0, marginTop: 10,        display: 'flex',
+        flexDirection: 'column' },
+    skillItem: {justifyContent: 'space-between', width: '100%', fontFamily: 'Helvetica',fontSize: 10,marginBottom: 8, marginLeft: 0, color: "#D3D3D3", flexDirection: 'row'},
+    checkIcon: {
+        width: 12,
+        height: 12,
+    },
+    certifiedText: {
+        fontSize: 10,
+        color: 'green',
+        marginRight:20,
+    },
     timelineContainer: { position: 'relative', marginLeft: 0, paddingLeft: 0, marginTop:20 },
     timelineLine: {
         position: 'absolute',
@@ -75,11 +85,60 @@ const styles = StyleSheet.create({
     timelineDate: { fontSize: 10,marginBottom:"3px", fontWeight: 'bold', color: '#333' },
     timelineDetails: { fontSize: 9, lineHeight: 1.4, color: '#333' },
     timelineJobTitle: {fontSize: 12,marginBottom:"5px", fontWeight: 'bold', color: '#333' },
-});
+    referencesContainer: { 
+        flexDirection: 'row', 
+        flexWrap: 'wrap', 
+        justifyContent: 'space-between', 
+        marginTop: 10 
+    },
+    referenceItem: { 
+        width: '48%', 
+        marginBottom: 10 
+    },
+    referenceName: { 
+        fontSize: 11, 
+        fontWeight: 'bold', 
+        marginBottom: 2 
+    },
+    referenceDetails: { 
+        fontSize: 9, 
+        marginBottom: 2 
+    },
+    referenceLabel: { 
+        fontSize: 8, 
+        fontWeight: 'bold' 
+    },
+    referenceValue: { 
+        fontSize: 8 
+    },
+    languageRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 3,
+    },
+    
+    languageName: {
+        fontFamily: 'Helvetica',fontWeight: 'bold' ,fontSize: 10,marginBottom: 8, marginLeft: 0, color: "white",
+    },
+    
+    languageProficiency: {
+        fontSize: 12,
+    },
 
-const MyPdfDocument = ({ header, experiences, skills, education, imgURL }) => (
+    languageStars: {
+        fontSize: 12,
+        marginRight:20,
+        textAlign: 'left'
+        
+    },
+
+
+
+});
+//size="A4" 
+const MyPdfDocument = ({ header, experiences, skills, education, imgURL, references,extraactivities,languages }) => (
     <Document>
-        <Page size="A4" style={styles.page}>
+        <Page size={{ width: 595.28, height: 'auto' }} style={styles.page}>
             {/* Left Column */}
             <View style={styles.leftColumn}>
                 {/* Profile Image */}
@@ -124,7 +183,7 @@ const MyPdfDocument = ({ header, experiences, skills, education, imgURL }) => (
                 </View>
 
                 {/* Skills */}
-                <View>
+                {/* <View>
                     <Text style={styles.sectionTitle}>Skills</Text>
                     <View style={styles.skillsList}>
                         {skills && skills.map((skill, index) => (
@@ -133,7 +192,48 @@ const MyPdfDocument = ({ header, experiences, skills, education, imgURL }) => (
                             </Text>
                         ))}
                     </View>
+                </View> */}
+                    <View>
+                        <Text style={styles.sectionTitle}>Skills</Text>
+                        <View style={styles.skillsList}>
+                            {skills && skills.map((skill, index) => (
+                                <View key={index} style={styles.skillItem}>
+                                    <Text>• {skill?.skill_name}</Text>
+                                    {skill?.certificate && <Text style={styles.certifiedText}><Image src="/images/check1.png" style={styles.checkIcon} />{" Certified"}</Text>}
+                                </View>
+                            ))}
+                        </View>
+                    </View>
+
+
+                <View>
+    <Text style={styles.sectionTitle}>Languages</Text>
+    <View style={styles.skillsList}>
+        {languages && languages.length > 0 ? (
+            languages.map((lang, index) => (
+                <View key={index} style={styles.languageRow}>
+                    <Text style={styles.languageName}>{lang.language}</Text>
+                    <Text style={styles.languageStars}>
+                        {Array(
+                            lang.proficiency === 'Beginner' ? 1 :
+                            lang.proficiency === 'Intermediate' ? 2 :
+                            lang.proficiency === 'Fluent' ? 3 : 0
+                        ).fill('*').join(' ')}
+                    </Text>
                 </View>
+            ))
+        ) : (
+            <Text style={styles.text}>No languages available</Text>
+        )}
+    </View>
+</View>
+
+
+
+
+
+
+
             </View>
 
             {/* Right Column */}
@@ -178,12 +278,78 @@ const MyPdfDocument = ({ header, experiences, skills, education, imgURL }) => (
             </View>
             </View>
 
-                {/* References */}
-                <View style={styles.references}>
-                    <Text style={styles.sectionTitle}>References</Text>
-                    <Text style={styles.text}>John Doe, Senior Manager, Example Inc. (john.doe@example.com)</Text>
-                    <Text style={styles.text}>Jane Smith, CEO, Another Co. (jane.smith@anotherco.com)</Text>
+
+
+            <Text style={styles.experienceTitle}>Extra Activities </Text>
+                <View>
+
+                <View style={styles.timelineContainer}>
+                    {/* Vertical Line */}
+
+
+                    <View style={styles.timelineLine}></View>
+                    {/* Timeline Items */}
+                    {extraactivities.map((exp, index) => (
+                        <View key={index} style={styles.timelineItem}>
+                            {/* Circle */}
+                            <View style={styles.timelineCircle}></View>
+                            {/* Text */}
+                            <View style={styles.timelineTextContainer}>
+                                <Text style={styles.timelineDate}>
+                                    {exp?.initial_date} - {exp?.current ? 'Present' : exp?.end_date}
+                                </Text>
+                                <Text style={styles.timelineDetails}>
+                                {exp?.company_name} | {exp?.place} 
+                                </Text>
+                                <Text style={styles.timelineJobTitle}>
+                                    {exp?.job_title} 
+                                </Text>
+                                <Text style={styles.timelineDetails}>{exp?.description}</Text>
+                            </View>
+                        </View>
+                    ))}
                 </View>
+
+                </View>
+
+
+
+
+
+
+
+
+
+                {/* References */}
+                <View>
+    <Text style={styles.experienceTitle}>References</Text>
+    {references && references.length > 0 ? (
+        <View style={styles.referencesContainer}>
+            {references.map((ref, index) => (
+                <View key={index} style={styles.referenceItem}>
+                    <Text style={styles.referenceName}>
+                        {ref.name} {ref.last_name}
+                    </Text>
+                    <Text style={styles.referenceDetails}>
+                        {ref.position}, {ref.company_name}
+                    </Text>
+                    <Text style={styles.referenceLabel}>
+                        Phone: <Text style={styles.referenceValue}>{ref.phone}</Text>
+                    </Text>
+                    <Text style={styles.referenceLabel}>
+                        Email: <Text style={styles.referenceValue}>{ref.email}</Text>
+                    </Text>
+                </View>
+            ))}
+        </View>
+    ) : (
+        <Text style={styles.text}>No references available</Text>
+    )}
+</View>
+
+
+
+
             </View>
         </Page>
     </Document>
